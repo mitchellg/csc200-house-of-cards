@@ -5,6 +5,7 @@ from nltk import bigrams
 
 # Have to have NTLK installed (with python 2.7): http://www.nltk.org/install.html
 # Creates a file where each line represents a bigram in the original text; does not filter duplicates.
+# code taken from here: http://jaganadhg.freeflux.net/blog/archive/2009/07/15/finding-bigrams-with-nltk.html
 
 def gen_bigrams(text):
     textbig = codecs.open(text, 'r','utf8').read()
