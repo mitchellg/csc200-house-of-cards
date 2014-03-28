@@ -10,7 +10,7 @@
 import collections
 import math
 import re
-
+from nltk import bigrams
 
 #input: path for file
 #return: a list of speech
@@ -29,12 +29,13 @@ def data_preprocessing(file_path):
     for ch in '$!"@#%&()*+,-./:;<=>?[\\]^_`{|}~':
         speeches = speeches.replace(ch,' ')
     
-    words = speeches.split()
-    total_words_count = len(words)
-    unique_words_dict = collections.Counter(words)   #key is word, value is the count, 
+    tokens = speeches.split()
+    #tokens = bigrams(tokens)                    # uncomment this line, we can use bigram as 
+    total_tokens_count = len(tokens)
+    unique_tokens_dict = collections.Counter(tokens)   #key is word, value is the count, 
                                                     #also default value 0 for non-exsit key.
     
-    result = [ speech_list, unique_words_dict, total_words_count ]
+    result = [ speech_list, unique_tokens_dict, total_tokens_count ]
     return result
 
 
@@ -63,11 +64,11 @@ def training(file1_path, file2_path, file3_path, file4_path):
     result_total = data_preprocessing(file5_path)
     
     training_result = {'prob_1':prob_1,'prob_2':prob_2,'prob_3':prob_3,'prob_4':prob_4,
-            'training_unique_words_count':len(result_total[1]),
-            'unique_words_dict_1':result1[1], 'total_words_count_1':result1[2],
-            'unique_words_dict_2':result2[1], 'total_words_count_2':result2[2],
-            'unique_words_dict_3':result3[1], 'total_words_count_3':result3[2],
-            'unique_words_dict_4':result4[1], 'total_words_count_4':result4[2]
+            'training_unique_tokens_count':len(result_total[1]),
+            'unique_tokens_dict_1':result1[1], 'total_tokens_count_1':result1[2],
+            'unique_tokens_dict_2':result2[1], 'total_tokens_count_2':result2[2],
+            'unique_tokens_dict_3':result3[1], 'total_tokens_count_3':result3[2],
+            'unique_tokens_dict_4':result4[1], 'total_tokens_count_4':result4[2]
             } 
 
     return training_result
@@ -81,15 +82,15 @@ def classify(training_result, test_speech):
     prob_2 = training_result['prob_2']
     prob_3 = training_result['prob_3']
     prob_4 = training_result['prob_4']
-    training_unique_words_count = training_result['training_unique_words_count']
-    unique_words_dict_1  = training_result['unique_words_dict_1']
-    unique_words_dict_2  = training_result['unique_words_dict_2']
-    unique_words_dict_3  = training_result['unique_words_dict_3']
-    unique_words_dict_4  = training_result['unique_words_dict_4']
-    total_words_count_1  = training_result['total_words_count_1']
-    total_words_count_2  = training_result['total_words_count_2']
-    total_words_count_3  = training_result['total_words_count_3']
-    total_words_count_4  = training_result['total_words_count_4']
+    training_unique_tokens_count = training_result['training_unique_tokens_count']
+    unique_tokens_dict_1  = training_result['unique_tokens_dict_1']
+    unique_tokens_dict_2  = training_result['unique_tokens_dict_2']
+    unique_tokens_dict_3  = training_result['unique_tokens_dict_3']
+    unique_tokens_dict_4  = training_result['unique_tokens_dict_4']
+    total_tokens_count_1  = training_result['total_tokens_count_1']
+    total_tokens_count_2  = training_result['total_tokens_count_2']
+    total_tokens_count_3  = training_result['total_tokens_count_3']
+    total_tokens_count_4  = training_result['total_tokens_count_4']
     test_speech = test_speech.lower()
 
     for ch in '!"%&()*+,-./:;<=>?[\\]^_`{|}~':
@@ -105,10 +106,10 @@ def classify(training_result, test_speech):
     #calculate every token's probability for each class
     for token in test_speech_tokens:
         # use +1 smoothing to avoid 0 probability. 
-        log_prob_1 = log_prob_1 + math.log( float( (unique_words_dict_1[token] + 1 )) / (total_words_count_1 + training_unique_words_count), 2)
-        log_prob_2 = log_prob_2 + math.log( float( (unique_words_dict_2[token] + 1 )) / (total_words_count_2 + training_unique_words_count), 2)
-        log_prob_3 = log_prob_3 + math.log( float( (unique_words_dict_3[token] + 1 )) / (total_words_count_3 + training_unique_words_count), 2)
-        log_prob_4 = log_prob_4 + math.log( float( (unique_words_dict_4[token] + 1 )) / (total_words_count_4 + training_unique_words_count), 2)
+        log_prob_1 = log_prob_1 + math.log( float( (unique_tokens_dict_1[token] + 1 )) / (total_tokens_count_1 + training_unique_tokens_count), 2)
+        log_prob_2 = log_prob_2 + math.log( float( (unique_tokens_dict_2[token] + 1 )) / (total_tokens_count_2 + training_unique_tokens_count), 2)
+        log_prob_3 = log_prob_3 + math.log( float( (unique_tokens_dict_3[token] + 1 )) / (total_tokens_count_3 + training_unique_tokens_count), 2)
+        log_prob_4 = log_prob_4 + math.log( float( (unique_tokens_dict_4[token] + 1 )) / (total_tokens_count_4 + training_unique_tokens_count), 2)
         
     
     #choose the class with highest probability 
@@ -135,7 +136,7 @@ if __name__ == '__main__':
     file3_path = 'libertarian.txt'
     file4_path = 'statist.txt'
    
-    test_speech = ""
+    test_speech = "I am so pleased I had a role in drafting this remarkable document. It embodies the values we hold dear as Democrats and as Americans, and it sets forth our great president's vision for our future where together we will reignite the American Dream for all. Because the reality is: Four years ago, the American Dream had slipped out of reach for too many, and it had turned into a nightmare for millions."
 
     training_result = training(file1_path, file2_path, file3_path, file4_path)
     classify(training_result, test_speech)
