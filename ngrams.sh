@@ -40,7 +40,7 @@ for ((i=1; i <= $2; i++)); do
    cp ${1}.cp ${1}.intermediate
 done
 
-# ${1}.intermediate
+# ${1}.intermediate is the list of ngrams, in order, in the text
 # sort the ngrams, count the unique occurrences, sort in descending order
 echo "sorting and counting uniques"
 sort ${1}.intermediate| uniq -c| sort -rg > ${1}.${2}gram
