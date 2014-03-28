@@ -16,7 +16,7 @@ fi
 # Now find all the bigrams in the file:
 tr -sc '[A-Z][a-z]' '[\012*]' < $1 > ${1}.tr && \
 tail -n +2 ${1}.tr > ${1}.nw && \
-paste ${1}.tr ${1}.tr | sort | uniq -c| sort -rg > ${1}.bigram && \
+paste ${1}.tr ${1}.nw | sort | uniq -c| sort -rg > ${1}.bigram && \
 rm ${1}.tr ${1}.nw && \
 exit 0
 
