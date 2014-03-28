@@ -36,7 +36,8 @@ def data_preprocessing(file_path):
     
     result = [ speech_list, unique_words_dict, total_words_count ]
     return result
-        
+
+
 # input: path for training data file
 # return: a dictionray with all training result        
 def training(file1_path, file2_path, file3_path, file4_path):
@@ -95,13 +96,13 @@ def classify(training_result, test_speech):
         test_speech = test_speech.replace(ch,' ')
         
     test_speech_tokens = test_speech.split()
-    log_prob_1         = math.log(prob_1,2)   # use log for easy addtion, because do multiplicaiton among a lot small values will result in overflow
-    log_prob_2         = math.log(prob_2,2)
+    log_prob_1         = math.log(prob_1,2)   # use log for easy addtion, because do multiplicaiton 
+    log_prob_2         = math.log(prob_2,2)   # among a lot small values will result in overflow
     log_prob_3         = math.log(prob_3,2)
     log_prob_4         = math.log(prob_4,2)
     
 
-    #calculate each the token's probability for each class
+    #calculate every token's probability for each class
     for token in test_speech_tokens:
         # use +1 smoothing to avoid 0 probability. 
         log_prob_1 = log_prob_1 + math.log( float( (unique_words_dict_1[token] + 1 )) / (total_words_count_1 + training_unique_words_count), 2)
@@ -125,13 +126,16 @@ def classify(training_result, test_speech):
         return 'class_statist'
 
 
+
+
+# For testing
 if __name__ == '__main__':
     file1_path = 'left.txt'
     file2_path = 'right.txt'
     file3_path = 'libertarian.txt'
     file4_path = 'statist.txt'
-    
-    test_speech = "You can paste the test speech here, and just run the program. I will do some modificaitons to test more speeches at once,and output some statistics."
+   
+    test_speech = ""
 
     training_result = training(file1_path, file2_path, file3_path, file4_path)
     classify(training_result, test_speech)
