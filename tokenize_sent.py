@@ -7,9 +7,9 @@
 
 from textblob import TextBlob
 
-fp = open("left.txt")
+fp = open("right.txt")
 zen = TextBlob(fp.read())
 zen.sentences
 
 for sentence in zen.sentences:
-	print(sentence + ",left")
+	print "\"" + str(sentence) + "\"" + ",right"
