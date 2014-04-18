@@ -20,4 +20,4 @@ for sentence in blob.sentences:
 print("Accuracy: {0}".format(cl.accuracy("test.csv", format="csv")))
  
 # Show 5 most informative features
-cl.show_informative_features(10)
+cl.show_informative_features(20)
