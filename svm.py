@@ -8,8 +8,8 @@ from data_preprocessing import data_preprocessing as dp
 
 
 def feature_extraction(unique_tokens_dict1, unique_tokens_dict2):
-    most_common_tokens_dict1 = dict( unique_tokens_dict1.most_common()[0:100] )
-    most_common_tokens_dict2 = dict( unique_tokens_dict2.most_common()[0:100] )
+    most_common_tokens_dict1 = dict( unique_tokens_dict1.most_common()[:500] )
+    most_common_tokens_dict2 = dict( unique_tokens_dict2.most_common()[:500] )
     features =  [ token for token in set(most_common_tokens_dict1) | set(most_common_tokens_dict2) ]
     #print features 
     return features
@@ -34,7 +34,7 @@ def convert_speeches_into_matrix(features,speech_list,label):
         tokens = [lmtzr.lemmatize(token) for token in tokens]
         tokens = [lmtzr.lemmatize(token,'v') for token in tokens]
 
-        tokens = bigrams(tokens)                    # uncomment this line, we can use bigram as
+        #tokens = bigrams(tokens)                    # uncomment this line, we can use bigram as
         unique_tokens_dict = collections.Counter(tokens)
 
         for fea in features:
@@ -69,7 +69,7 @@ def svm_training(file1_path,file2_path):
     #clf.fit(X_matrix[:-2],Y_vector[:-2])
     #print clf.predict(X_matrix[-1])
     #length_of_fold = len(X_matrix) / 5
-    accuracies = 0
+    average_accuracy = 0
     for i in range(10):
         X_matrix_clone = list(X_matrix)
         Y_vector_clone = list(Y_vector)
@@ -100,9 +100,9 @@ def svm_training(file1_path,file2_path):
             if Y_vector_test[k] == Y_test_predict[k]:
                 count += 1
         accuracy = float(count) / len(Y_vector_test)
-        print 'accuracy', accuracy
-        accuracies += accuracy 
-    print "total_accuracy", accuracies/10
+        #print 'accuracy', accuracy
+        average_accuracy += accuracy 
+    print "average_accuracy", average_accuracy/10
 
 if __name__ == '__main__':
     file1_path = 'left.txt'

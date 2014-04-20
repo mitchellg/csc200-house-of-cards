@@ -31,7 +31,7 @@ def data_preprocessing(file_path):
     tokens = [lmtzr.lemmatize(token) for token in tokens]
     tokens = [lmtzr.lemmatize(token,'v') for token in tokens]
 
-    tokens = bigrams(tokens)                    # uncomment this line, we can use bigram as
+    #tokens = bigrams(tokens)                    # uncomment this line, we can use bigram as
 
     total_tokens_count = len(tokens)
     unique_tokens_dict = collections.Counter(tokens)   #key is word, value is the count,
